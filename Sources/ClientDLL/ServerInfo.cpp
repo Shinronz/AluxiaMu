@@ -56,7 +56,7 @@ void CServerInfo::Load(std::string file)
 {
 	char ver[5];
 	char szTemp[250];
-	LPSTR filedec = "/ServerInfo.bmd";
+	LPSTR filedec = "/Data/Local/ServerInfo.bmd";
 
 	/*FILE* hFile = fopen(file.c_str(), "rb");
 	if (!hFile)
@@ -82,7 +82,7 @@ void CServerInfo::Load(std::string file)
 	decFile.open(filedec);
 	decFile << buf;
 	decFile.close();*/
-	GetPrivateProfileStringA("Connection", "IP", "192.168.0.168", szTemp, 250, filedec);
+	GetPrivateProfileStringA("Connection", "IP", "52.184.178.130", szTemp, 250, filedec);
 	m_Ip = std::string(szTemp);
 	m_Port = GetPrivateProfileInt("Connection", "Port", 44405, filedec);
 	m_ChatServerPort = GetPrivateProfileIntA("Connection","ChatPort", 56960, filedec);
@@ -121,7 +121,7 @@ void CServerInfo::Load(std::string file)
 	WritePrivateProfileStringA("Patcher", "ExeName", m_PathcherFile,".\\Config.ini");
 	
 	*/
-	DeleteFileA(filedec);
+	//DeleteFileA(filedec);
 }
 
 char* CServerInfo::GetIp()

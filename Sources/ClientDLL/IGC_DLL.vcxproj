@@ -50,7 +50,7 @@
     <EmbedManifest>true</EmbedManifest>
     <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\zClient\</OutDir>
+    <OutDir>..\..\Client\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <TargetName>IGC</TargetName>
   </PropertyGroup>

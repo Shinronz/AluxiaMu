@@ -26,3 +26,20 @@
 # Executables
 *.out
 *.app
+
+# Others
+*.db
+*.tlog
+*.exe
+*.iobj
+*.ipdb
+*.cod
+*.sbr
+*.res
+*.map
+*.log
+*.suo
+*.bsc
+*.idb
+*.ipch
+*.cache
