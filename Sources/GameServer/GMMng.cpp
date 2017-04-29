@@ -41,6 +41,28 @@
 #include "QuestExpProgMng.h"
 #include "ChangeCmd.h"
 #include "UpgradeCmd.h"
+#include "LastManStanding.h"
+//Reload
+#include "RingAttackEvent.h"
+#include "EledoradoEvent.h"
+#include "EventManagement.h"
+#include "CashShop.h"
+#include "CItemDrop.h"
+#include "NewsSystem.h"
+#include "ItemAddOption.h"
+#include "SetItemOption.h"
+#include "QuestInfo.h"
+#include "SetItemDrop.h"
+#include "PentagramMixSystem.h"
+#include "MapAttribute.h"
+#include "BagManager.h"
+#include "ProhibitedSymbols.h"
+#include "ExpManager.h"
+#include "XMasAttackEvent.h"
+
+
+CRingAttackEvent g_RingAttackEvent2;
+CXMasAttackEvent g_XMasAttackEvent2;
 
 CGMMng cManager;
 static CLogToFile * CommandLog;
@@ -134,6 +156,8 @@ void CGMMng::LoadCommandFile(LPSTR file)
 
 	GetPrivateProfileString("joinmu", "ChangeItemCMD", "/changeitem", m_CommandNames.JoinMuChangeCMD, 20, file);
 	GetPrivateProfileString("joinmu", "UpgradeItemCMD", "/upgradeitem", m_CommandNames.JoinMuUpgradeCMD, 20, file);
+
+	GetPrivateProfileString("commands", "Reload", "/reload", m_CommandNames.Reload, 20, file);
 
 }
 void CGMMng::Init()
@@ -241,6 +265,7 @@ void CGMMng::Init()
 	this->cCommand.Add("/questchangeday", 454);
 	this->cCommand.Add(m_CommandNames.JoinMuChangeCMD, 455);
 	this->cCommand.Add(m_CommandNames.JoinMuUpgradeCMD, 456);
+	this->cCommand.Add(m_CommandNames.Reload, 457);
 	this->WatchTargetIndex = -1;
 }
 
@@ -3212,6 +3237,112 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 			}
 		}
 		break;
+
+		case 457: 
+		{
+			if ((lpObj->Authority & 2) != 2 && (lpObj->Authority & 0x20) != 0x20)
+			{
+				return FALSE;
+			}
+			int ReloadType = this->GetTokenNumber();
+
+			if (ReloadType == NULL)
+			{
+				MsgOutput(aIndex, "Debes ingresar que tipo de configuracion desea recargar");
+				return FALSE;
+			}
+
+			switch (ReloadType)
+			{
+			case 0:
+			{
+				ReloadEvent(EVENT_BC);
+				ReloadEvent(EVENT_DS);
+				ReloadEvent(EVENT_CC);
+				ReloadEvent(EVENT_IT);
+				ReloadEvent(EVENT_CS);
+				ReloadEvent(EVENT_DEEP);
+				ReloadEvent(EVENT_CW);
+				ReloadEvent(EVENT_KANTURU);
+				ReloadEvent(EVENT_RAKLION);
+				ReloadEvent(EVENT_DG);
+				ReloadEvent(EVENT_IF);
+				ReloadEvent(EVENT_ARCA);
+				ReloadEvent(EVENT_ACHERON);
+				g_LastManStanding.LoadConfig(g_ConfigRead.GetPath("\\Events\\IGC_LastManStanding.xml"));
+				g_LastManStanding.SpawnRegNPC();
+			}
+			break;
+			case 1:
+			{
+				OpenItemScript(g_ConfigRead.GetPath("\\Items\\IGC_ItemList.xml"));
+				g_PentagramMixSystem.LoadMixNeedSourceScript(g_ConfigRead.GetPath("\\Items\\IGC_PentagramMixNeedSource.xml"));
+				g_PentagramMixSystem.LoadJewelOptionScript(g_ConfigRead.GetPath("\\Items\\IGC_PentagramJewelOptionValue.xml"));
+				g_PentagramSystem.LoadDropScript(g_ConfigRead.GetPath("\\Items\\IGC_PentagramItemDropRate.xml"));
+				g_PentagramSystem.LoadJewelOutRate(g_ConfigRead.GetPath("\\Items\\IGC_PentagramJewelOutRate.xml"));
+				//g_PentagramSystem.LoadPentagramSetOptionScript(gDirPath.GetNewPath("\\Items\\PentagramSetOption.ini"));
+				g_PentagramSystem.LoadPentagramOptionScript(g_ConfigRead.GetPath("\\Items\\IGC_PentagramOption.xml"));
+				LoadResetItemList(g_ConfigRead.GetPath("\\Items\\IGC_ResetItem.xml"));
+				gSetItemOption.LoadOptionInfo(g_ConfigRead.GetPath("\\Items\\IGC_ItemSetOption.xml"));
+				gSetItemOption.LoadTypeInfo(g_ConfigRead.GetPath("\\Items\\IGC_ItemSetType.xml"));
+				g_SocketOptionSystem.LoadOptionScript(g_ConfigRead.GetPath("\\SocketSystem\\IGC_SocketOption.xml"));
+				g_kJewelOfHarmonySystem.LoadScript(g_ConfigRead.GetPath("\\Items\\IGC_HarmonyItem_Option.xml"));
+				g_kJewelOfHarmonySystem.LoadScriptOfSmelt(g_ConfigRead.GetPath("\\Items\\IGC_HarmonyItem_Smelt.xml"));
+				g_kItemSystemFor380.Load380ItemOptionInfo(g_ConfigRead.GetPath("\\Items\\IGC_Item380Option.xml"));
+				g_ItemAddOption.Load(g_ConfigRead.GetPath("\\Items\\IGC_ItemOptionManager.xml"));
+				g_VipSystem.ReadFile("IGC_VipSettings.xml");
+				MagicDamageC.LogSkillList(g_ConfigRead.GetPath("\\Skills\\IGC_SkillList.xml"));
+				gMoveCommand.Load(g_ConfigRead.GetPath("\\Warps\\IGC_MoveReq.xml"));
+				gMoveCommand.LoadMoveLevel(g_ConfigRead.GetPath("\\Warps\\IGC_MoveLevel.xml"));
+				g_BagManager.InitBagManager();
+				g_EventManager.Load(g_ConfigRead.GetPath("\\Events\\IGC_InvasionManager.xml"));
+				g_EventManager.RegEvent(0, DragonEvent);
+				g_EventManager.RegEvent(1, AttackEvent);
+				g_EventManager.RegEvent(2, &gEledoradoEvent);
+				g_EventManager.RegEvent(3, &g_RingAttackEvent2);
+				g_EventManager.RegEvent(4, &g_XMasAttackEvent2);
+				g_EventManager.Init();
+				g_QuestInfo.LoadQuestInfo(g_ConfigRead.GetPath("IGC_ClassQuest.xml"));
+				GameMonsterAllCloseAndReLoad();
+				g_CashShop.CashShopOptioNReload();
+				g_ShopMng.LoadShopList(g_ConfigRead.GetPath("IGC_ShopList.xml"));
+			}
+			break;
+			case 2:
+			{
+				Lang.Init();
+				g_MapServerManager.LoadData(g_ConfigRead.GetPath("IGC_MapServerInfo.xml"));
+				CheckSumFileLoad(gDirPath.GetNewPath("CheckSum.dat"));
+				g_prohibitedSymbols.LoadSymbolFile(g_ConfigRead.GetPath("IGC_ProhibitedSymbols.xml"));
+				SwearFilter.LoadFile(g_ConfigRead.GetPath("IGC_ProhibitedWords.xml"));
+			}
+			break;
+			case 3:
+			{
+				ItemDrop.LoadFile(g_ConfigRead.GetPath("IGC_DropManager.xml"));
+				SetItemDrop.LoadFile(g_ConfigRead.GetPath("IGC_SetItemDropManager.xml"));
+				g_ExpManager.LoadScript(g_ConfigRead.GetPath("IGC_ExpSystem.xml"));
+				g_MapAttr.LoadFile(g_ConfigRead.GetPath("IGC_MapAttribute.xml"));
+				cManager.Init();
+				g_NewsSystem.LoadFile(g_ConfigRead.GetPath("IGC_NewsSystem.xml"));
+				GameMonsterAllCloseAndReLoad();
+			}
+			break;
+			case 4:
+			{
+				ReadCommonServerInfo();
+				if (g_ConfigRead.OffLevel == true)
+				{
+					g_OffLevel.LoadFile(g_ConfigRead.GetPath("\\Plugins\\IGC_OffLevelling.xml"));
+					g_OffLevel.LoadSkillDefinitions(g_ConfigRead.GetPath("\\Skills\\IGC_SkillCategory.xml"));
+				}
+				else {
+					g_Log.AddC(TColor::Red, "Your license does not have Offlevel plugin purchased, please disable Off-Level system");
+				}
+			}
+			break;
+			}
+		}
 
 	}
 	return 0;

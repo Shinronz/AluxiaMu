@@ -12,6 +12,8 @@
 #define MAX_GAME_MASTER 5
 
 #include "user.h"
+#include "RingAttackEvent.h"
+#include "XMasAttackEvent.h"
 
 struct COMMANDS_DATA
 {
@@ -99,6 +101,9 @@ struct COMMANDS_DATA
 
 	char JoinMuChangeCMD[20]; // private
 	char JoinMuUpgradeCMD[20]; // private
+
+	//Reload
+	char Reload[20];
 };
 
 struct GM_DATA
@@ -194,7 +199,8 @@ public:
 };
 
 extern CGMMng cManager;
-
+extern CRingAttackEvent g_RingAttackEvent2;
+extern CXMasAttackEvent g_XMasAttackEvent2;
 #endif
 
 //////////////////////////////////////////////////////////////////////

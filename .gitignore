@@ -43,3 +43,4 @@
 *.idb
 *.ipch
 *.cache
+*.opendb
