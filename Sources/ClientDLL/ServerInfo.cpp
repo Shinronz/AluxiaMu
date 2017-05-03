@@ -56,7 +56,7 @@ void CServerInfo::Load(std::string file)
 {
 	char ver[5];
 	char szTemp[250];
-	LPSTR filedec = "/Data/Local/ServerInfo.bmd";
+	LPSTR filedec = "Data\\Local\\ServerInfo.bmd";
 
 	/*FILE* hFile = fopen(file.c_str(), "rb");
 	if (!hFile)

@@ -3254,7 +3254,7 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 
 			switch (ReloadType)
 			{
-			case 0:
+			case 1:
 			{
 				ReloadEvent(EVENT_BC);
 				ReloadEvent(EVENT_DS);
@@ -3273,7 +3273,7 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 				g_LastManStanding.SpawnRegNPC();
 			}
 			break;
-			case 1:
+			case 2:
 			{
 				OpenItemScript(g_ConfigRead.GetPath("\\Items\\IGC_ItemList.xml"));
 				g_PentagramMixSystem.LoadMixNeedSourceScript(g_ConfigRead.GetPath("\\Items\\IGC_PentagramMixNeedSource.xml"));
@@ -3308,7 +3308,7 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 				g_ShopMng.LoadShopList(g_ConfigRead.GetPath("IGC_ShopList.xml"));
 			}
 			break;
-			case 2:
+			case 3:
 			{
 				Lang.Init();
 				g_MapServerManager.LoadData(g_ConfigRead.GetPath("IGC_MapServerInfo.xml"));
@@ -3317,7 +3317,7 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 				SwearFilter.LoadFile(g_ConfigRead.GetPath("IGC_ProhibitedWords.xml"));
 			}
 			break;
-			case 3:
+			case 4:
 			{
 				ItemDrop.LoadFile(g_ConfigRead.GetPath("IGC_DropManager.xml"));
 				SetItemDrop.LoadFile(g_ConfigRead.GetPath("IGC_SetItemDropManager.xml"));
@@ -3328,7 +3328,7 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 				GameMonsterAllCloseAndReLoad();
 			}
 			break;
-			case 4:
+			case 5:
 			{
 				ReadCommonServerInfo();
 				if (g_ConfigRead.OffLevel == true)

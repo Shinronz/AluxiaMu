@@ -149,7 +149,7 @@ void SetValues()
 
 	ResourceManager.Preloader();
 	g_Controller.Load();
-	g_ServerInfo->Load(".\\Data\\Local\\ServerInfo.bmd");
+	g_ServerInfo->Load("Data\\Local\\ServerInfo.bmd");
 
 	// 009E8D8C   837D F8 04 CMP DWORD PTR SS:[EPB-8],4
 	VirtualProtect((LPVOID)(0x00A16996 + 3), 1, PAGE_EXECUTE_READWRITE, &OldProtect); // S9
