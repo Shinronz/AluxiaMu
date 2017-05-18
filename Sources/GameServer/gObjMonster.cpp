@@ -3790,6 +3790,12 @@ void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTargetObj)
 		return;	
 	}
 
+	if (lpObj->Class == 561)
+	{
+		g_BagManager.SearchAndUseBag(lpTargetObj->m_Index, BAG_EVENT, EVENTBAG_MEDUSA, lpTargetObj->m_Index);
+		return;
+	}
+
 	if (lpObj->Class == 652)
 	{
 		g_BagManager.SearchAndUseBag(lpTargetObj->m_Index, BAG_EVENT, EVENTBAG_GOLDCOLOSSUS_GOBLIN, lpTargetObj->m_Index);

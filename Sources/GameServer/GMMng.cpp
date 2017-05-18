@@ -2437,32 +2437,50 @@ int CGMMng::ManagementProc(LPOBJ lpObj, char* szCmd, int aIndex)
 			}
 			break;
 		case 418:
-			for(int i=0;i<INVENTORY_SIZE;++i)
+			if ((gObj[aIndex].Authority & 2) != 2 && (gObj[aIndex].Authority & 0x20) != 0x20) /*Check if user is GM*/
+				return 0;
+
+			pId = this->GetTokenString();
+
+			if (pId == NULL)
 			{
-				if(lpObj->pInventory[i].IsItem() == TRUE)
+				return 0;
+			}
+			
+			LPOBJ lpTargetObj2;
+			lpTargetObj2 = gObjFind(pId);
+
+			if (lpTargetObj2 == NULL) 
+			{
+				return 0;
+			}
+
+			for(int i=12;i<INVENTORY_SIZE;++i)
+			{
+				if(lpTargetObj2->pInventory[i].IsItem() == TRUE)
 				{
-					if (g_PentagramSystem.IsPentagramItem(&lpObj->pInventory[i]) == true)
+					if (g_PentagramSystem.IsPentagramItem(&lpTargetObj2->pInventory[i]) == true)
 					{
 						for (int j = 0; j < 5; j++)
 						{
-							if (lpObj->pInventory[i].m_SocketOption[j] < 0xFE)
+							if (lpTargetObj2->pInventory[i].m_SocketOption[j] < 0xFE)
 							{
-								g_PentagramSystem.DelPentagramJewelInfo(aIndex, 0, lpObj->pInventory[i].m_SocketOption[j]);
+								g_PentagramSystem.DelPentagramJewelInfo(lpTargetObj2->m_Index, 0, lpTargetObj2->pInventory[i].m_SocketOption[j]);
 							}
 						}
 
-						g_PentagramSystem.GCPentagramJewelInfo(aIndex, 0);
+						g_PentagramSystem.GCPentagramJewelInfo(lpTargetObj2->m_Index, 0);
 					}
 
-					gObjInventoryDeleteItem(aIndex, i);
-					GSProtocol.GCInventoryItemDeleteSend(aIndex, i, 1);
+					gObjInventoryDeleteItem(lpTargetObj2->m_Index, i);
+					GSProtocol.GCInventoryItemDeleteSend(lpTargetObj2->m_Index, i, 1);
 				}
 
 				
 			}
-			lpObj->m_PlayerData->Money = 0;
-			GSProtocol.GCMoneySend(lpObj->m_Index, lpObj->m_PlayerData->Money);
-			g_Log.AddC(TColor::Red,  "[%s][%s] Cleared inventory", lpObj->AccountID, lpObj->Name);
+			//lpObj->m_PlayerData->Money = 0;
+			//GSProtocol.GCMoneySend(lpObj->m_Index, lpObj->m_PlayerData->Money);
+			g_Log.AddC(TColor::Red,  "[%s][%s] Cleared inventory from [%s]", lpObj->AccountID, lpObj->Name, lpTargetObj2->Name);
 			MsgOutput(lpObj->m_Index, Lang.GetText(0,465));
 			break;
 		case 420:

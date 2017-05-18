@@ -40,8 +40,8 @@ BOOL CXMasMonsterHerd::MonsterHerdItemDrop(LPOBJ lpObj)
 	{
 		int iIndex = gObjMonsterTopHitDamageUser(lpObj);
 		int itemnumber = ItemGetNumberMake(13, 66);
-		ItemSerialCreateSend(lpObj->m_Index, lpObj->MapNumber, lpObj->X, lpObj->Y, itemnumber, 0, 0, 0, 0, 0, iIndex, 0, 0, 0, 0, 0);
-
+		//ItemSerialCreateSend(lpObj->m_Index, lpObj->MapNumber, lpObj->X, lpObj->Y, itemnumber, 0, 0, 0, 0, 0, iIndex, 0, 0, 0, 0, 0);
+		//g_BagManager.SearchAndUseBag(lpObj->m_Index, BAG_EVENT, EVENTBAG_MEDUSA, iIndex);
 		int buff = rand()%3;
 		int count = 0;
 
